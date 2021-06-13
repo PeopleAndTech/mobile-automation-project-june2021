@@ -7,12 +7,9 @@ import com.relevantcodes.extentreports.LogStatus;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.remote.MobileCapabilityType;
-import io.appium.java_client.remote.MobilePlatform;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.*;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.testng.ITestContext;
 import org.testng.ITestResult;
@@ -43,7 +40,7 @@ public class TestBase {
         DesiredCapabilities cap = new DesiredCapabilities();
         if (platform.equalsIgnoreCase("android")) {
             cap.setCapability(MobileCapabilityType.DEVICE_NAME, deviceName);
-            cap.setCapability(MobileCapabilityType.PLATFORM_NAME, MobilePlatform.ANDROID);
+            cap.setCapability(MobileCapabilityType.PLATFORM_NAME, "android");
             cap.setCapability(MobileCapabilityType.PLATFORM_VERSION, platformVersion);
             cap.setCapability(MobileCapabilityType.APP_PACKAGE, "com.tdbank");
             cap.setCapability(MobileCapabilityType.APP_ACTIVITY, "com.td.dcts.android.us.app.SplashScreenActivity");
@@ -52,7 +49,6 @@ public class TestBase {
             //code for ios
         }
         driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
-
     }
 
 
@@ -69,6 +65,49 @@ public class TestBase {
         } catch (Exception e) {
             System.out.println("Exception while taking screenshot " + e.getMessage());
         }
+    }
+
+    /**
+     * This method will swipe either up, Down, left or Right according to the
+     * direction specified. This method takes the size of the screen and uses
+     * the swipe function present in the Appium driver to swipe on the screen
+     * with a particular timeout. There is one more method to implement swipe
+     * using touch actions, which is not put up here.
+     *
+     * @param direction The direction we need to swipe in.
+     * @param swipeTime The swipe time, ie the time for which the driver is supposed
+     *                  to swipe.
+     * @param offset    The offset for the driver, eg. If you want to swipe 'up', then
+     *                  the offset is the number of pixels you want to leave from the
+     *                  bottom of the screen t start the swipe.
+     * @Author - Zann
+     * @Modified By -
+     */
+
+    public static void functionSwipe(String direction, int swipeTime, int offset) {
+        Dimension size;
+        size = (driver).manage().window().getSize();
+        int starty = (int) (size.height * 0.80);
+        int endy = (int) (size.height * 0.20);
+        int startx = size.width / 2;
+        if (direction.equalsIgnoreCase("Up")) {
+            ((AppiumDriver<WebElement>) (driver)).swipe(startx / 2, starty - offset, startx / 2, endy, swipeTime);
+        } else if (direction.equalsIgnoreCase("Down")) {
+            ((AppiumDriver<WebElement>) (driver)).swipe(startx / 2, endy + offset, startx / 2, starty, swipeTime);
+        } else if (direction.equalsIgnoreCase("Right")) {
+            starty = size.height / 2;
+            endy = size.height / 2;
+            startx = (int) (size.width * 0.10);
+            int endx = (int) (size.width * 0.90);
+            ((AppiumDriver<WebElement>) (driver)).swipe(startx + offset, starty, endx, endy, swipeTime);
+        } else if (direction.equalsIgnoreCase("Left")) {
+            starty = size.height / 2;
+            endy = size.height / 2;
+            startx = (int) (size.width * 0.90);
+            int endx = (int) (size.width * 0.10);
+            ((AppiumDriver<WebElement>) (driver)).swipe(startx - offset, starty, endx, endy, swipeTime);
+        }
+
     }
 
     //reporting starts
@@ -120,6 +159,7 @@ public class TestBase {
         calendar.setTimeInMillis(millis);
         return calendar.getTime();
     }
+
     //reporting finish
 
     @AfterSuite
@@ -128,7 +168,8 @@ public class TestBase {
     }
 
     @AfterMethod
-    public void cleanUp() {
+    public void cleanUp() throws InterruptedException {
+        Thread.sleep(10000);
         driver.quit();
         LOGGER.info("driver closed");
     }
