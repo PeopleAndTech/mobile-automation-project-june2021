@@ -1,10 +1,14 @@
 package com.td.pages;
 
+import com.core.report.ExtentTestManager;
+import org.apache.log4j.Logger;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.testng.Assert;
 
 public class HomePage {
+
+    private static final Logger LOGGER = Logger.getLogger(HomePage.class);
 
     @FindBy(xpath = "//android.widget.Button[@text='ACCOUNTS']")
     private WebElement accounts;
@@ -24,6 +28,7 @@ public class HomePage {
     public void validateAndClickOnAccountButton() {
         Assert.assertTrue(accounts.isDisplayed());
         accounts.click();
+        ExtentTestManager.log("Accounts clicked from homepage", LOGGER);
     }
 
     public void validateAndClickOnTransferButton() {

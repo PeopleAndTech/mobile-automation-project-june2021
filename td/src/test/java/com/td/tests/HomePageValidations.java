@@ -18,15 +18,14 @@ public class HomePageValidations extends TestBase {
         functionSwipe("up", 200, 1100);
     }
 
-    // @Test
+    @Test
     public void validateUserCanViewAndClickOnAllHeaderButtons() {
         HomePage homePage = PageFactory.initElements(driver, HomePage.class);
         LoginPage loginPage = PageFactory.initElements(driver, LoginPage.class);
 
         homePage.validateAndClickOnAccountButton();
-        ExtentTestManager.log("Accounts clicked from homepage", LOGGER);
         loginPage.cliuckOnBackButton();
-        ExtentTestManager.log("Back button clicked", LOGGER);
+
 
         homePage.validateAndClickOnTransferButton();
         ExtentTestManager.log("Transfer clicked from homepage", LOGGER);

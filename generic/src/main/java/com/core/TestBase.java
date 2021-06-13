@@ -32,8 +32,14 @@ public class TestBase {
 
     private static final Logger LOGGER = Logger.getLogger(TestBase.class);
     public static AppiumDriver driver;
-    public static ExtentReports extent;
+    private static ExtentReports extent;
 
+    /**
+     * @param platform        : platform of the mobile device
+     * @param deviceName      : udid if the device
+     * @param platformVersion
+     * @throws MalformedURLException
+     */
     @Parameters({"platform", "deviceName", "platformVersion"})
     @BeforeMethod
     public static void getAppiumDriver(String platform, String deviceName, String platformVersion) throws MalformedURLException {
@@ -53,7 +59,7 @@ public class TestBase {
 
 
     //screenshot
-    public static void captureScreenshot(WebDriver driver, String screenshotName) {
+    private static void captureScreenshot(WebDriver driver, String screenshotName) {
         DateFormat dateFormat = new SimpleDateFormat("HH_mm_ss");
         Date date = new Date();
         // --> dateFormat.format(date);
@@ -124,7 +130,7 @@ public class TestBase {
         ExtentTestManager.getTest().assignCategory(className);
     }
 
-    protected String getStackTrace(Throwable t) {
+    private String getStackTrace(Throwable t) {
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
         t.printStackTrace(pw);
@@ -154,7 +160,7 @@ public class TestBase {
         }
     }
 
-    public Date getTime(long millis) {
+    private Date getTime(long millis) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(millis);
         return calendar.getTime();
